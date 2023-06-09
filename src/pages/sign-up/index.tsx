@@ -32,9 +32,10 @@ const FromRegister = () => {
   });
   const onSubmit = async (userInfo: CreateUserType) => {
     try {
-      const { authenticate } = await authProvider.signUp(userInfo);
+      await authProvider.signUp(userInfo);
+      const { authenticate } = await authProvider.signIn(userInfo);
 
-      authenticate && (await router.push("/profile")) && reset();
+      authenticate && (await router.push("/message")) && reset();
     } catch (error) {
       console.error(error);
     }

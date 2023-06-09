@@ -1,11 +1,16 @@
 import Image from "next/image";
-import React from "react";
-
-const Sidebar = () => {
+import React, { useEffect, useState } from "react";
+import avatar from "../../public/avatar-homme.png";
+import { getCookie } from "@/utils/cookie";
+const Sidebar = ({ cookie }) => {
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    setUser(cookie);
+  }, []);
   return (
     <>
       <div className="flex flex-row items-center justify-center h-12 w-full">
-        <div className="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10">
+        <div className="flex items-center justify-center rounded-2xl text-teal-600 bg-indigo-100 h-10 w-10">
           <svg
             className="w-6 h-6"
             fill="none"
@@ -23,23 +28,30 @@ const Sidebar = () => {
         </div>
         <div className="ml-2 font-bold text-2xl">Sleek</div>
       </div>
-      <div className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
+      <div className="flex flex-col items-center bg-teal-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
         <div className="h-20 w-20 rounded-full border overflow-hidden">
           <Image
-            src="https://avatars3.githubusercontent.com/u/2763884?s=128"
+            src={avatar}
             alt="Avatar"
             className="h-full w-full"
             width={"50"}
             height={"50"}
           />
         </div>
-        <div className="text-sm font-semibold mt-2">Aminos Co.</div>
-        <div className="text-xs text-gray-500">Lead UI/UX Designer</div>
+        <div className="text-sm font-semibold mt-2">{user?.name}</div>
+        <div className="text-xs text-gray-500">{user?.bio}</div>
         <div className="flex flex-row items-center mt-3">
-          <div className="flex flex-col justify-center h-4 w-8 bg-indigo-500 rounded-full">
+          <div className="flex flex-col justify-center h-4 w-8 bg-teal-500 rounded-full">
             <div className="h-3 w-3 bg-white rounded-full self-end mr-1"></div>
           </div>
-          <div className="leading-none ml-1 text-xs">Active</div>
+          <div className="leading-none ml-1 text-xs">
+            {(() => {
+              if (user?.status === 0) return "Away";
+              else if (user?.status === 1) return "Connected";
+              else if (user?.status === 2) return "Do not disturb";
+              return null; // Return null if the status doesn't match any condition
+            })()}
+          </div>
         </div>
       </div>
       <div className="flex flex-col mt-8">
