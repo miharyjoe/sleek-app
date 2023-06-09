@@ -3,12 +3,10 @@ import { userProvider } from "@/providers/userProvider";
 import { UserType } from "@/types/user";
 import { getCookie } from "@/utils/cookie";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 const schema = yup
   .object({
@@ -25,7 +23,6 @@ const schema = yup
   .required();
 type FormData = yup.InferType<typeof schema>;
 const Profile = () => {
-  const router = useRouter();
   const cookieString = getCookie("userInfo");
 
   let cookie: any = null;
@@ -52,7 +49,7 @@ const Profile = () => {
       console.error(error);
     }
   };
-
+  const [bio, setBio] = useState(cookie?.bio);
   return (
     <div className="flex h-screen antialiased text-gray-800">
       <div className="flex flex-row h-full w-full overflow-x-hidden">
@@ -103,23 +100,6 @@ const Profile = () => {
                       {errors.email?.message}
                     </p>
                   </div>
-                </div>{" "}
-                <div>
-                  <label className="sr-only">Bio</label>
-
-                  <div className="relative">
-                    <input
-                      type="text"
-                      className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                      placeholder="Your bio"
-                      {...register("bio")}
-                      name="bio"
-                      defaultValue={cookie?.bio || ""}
-                    />
-                    <p className="text-xs text-red-500">
-                      {errors.bio?.message}
-                    </p>
-                  </div>
                 </div>
                 <div>
                   <label className="sr-only">currentPassword</label>
@@ -166,10 +146,27 @@ const Profile = () => {
                       {errors.confirmPassword?.message}
                     </p>
                   </div>
+                  <div>
+                    <label className="sr-only">Bio</label>
+
+                    <div className="relative">
+                      <textarea
+                        className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                        placeholder="Your bio"
+                        {...register("bio")}
+                        name="bio"
+                        value={bio}
+                        onChange={(e) => setBio(e.target.value)}
+                      />
+                      <p className="text-xs text-red-500">
+                        {errors.bio?.message}
+                      </p>
+                    </div>
+                  </div>
                 </div>
                 <button
                   type="submit"
-                  className="registerButton block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white"
+                  className="updateProfileButton block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white"
                 >
                   Update info
                 </button>
