@@ -168,7 +168,7 @@ const Profile = () => {
                   type="submit"
                   className="updateProfileButton block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white"
                 >
-                  Update info
+                  Update Profile
                 </button>
               </form>
             </div>
