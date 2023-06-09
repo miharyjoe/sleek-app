@@ -5,13 +5,18 @@ import Link from "next/link";
 
 const schema = yup
   .object({
+    name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().required(),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match")
+      .required(),
   })
   .required();
 type FormData = yup.InferType<typeof schema>;
 
-export default function FormLogin() {
+const FromRegister = () => {
   const {
     register,
     handleSubmit,
@@ -19,6 +24,7 @@ export default function FormLogin() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+
   const onSubmit = (data: FormData) => console.log(data);
 
   return (
@@ -37,9 +43,22 @@ export default function FormLogin() {
           className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8"
         >
           <p className="text-center text-lg font-medium">
-            Sign in to your account
+            Create a new account
           </p>
+          <div>
+            <label className="sr-only">Name</label>
 
+            <div className="relative">
+              <input
+                type="text"
+                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                placeholder="Enter name"
+                {...register("name")}
+                name="name"
+              />
+              <p className="text-xs text-red-500">{errors.name?.message}</p>
+            </div>
+          </div>
           <div>
             <label className="sr-only">Email</label>
 
@@ -54,7 +73,6 @@ export default function FormLogin() {
               <p className="text-xs text-red-500">{errors.email?.message}</p>
             </div>
           </div>
-
           <div>
             <label className="sr-only">Password</label>
 
@@ -70,21 +88,38 @@ export default function FormLogin() {
             </div>
           </div>
 
+          <div>
+            <label className="sr-only">Confirm Password</label>
+
+            <div className="relative">
+              <input
+                type="password"
+                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                placeholder="Confirm password"
+                {...register("confirmPassword")}
+                name="confirmPassword"
+              />
+              <p className="text-xs text-red-500">
+                {errors.confirmPassword?.message}
+              </p>
+            </div>
+          </div>
           <button
             type="submit"
-            className="loginButton block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white"
+            className="registerButton block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white"
           >
-            Login
+            Register
           </button>
-
           <p className="text-center text-sm text-gray-500">
-            No account?
-            <Link className="underline" href="/sign-up">
-              Sign up
+            Already have an account?
+            <Link className="underline" href="/sign-in">
+              Sign in
             </Link>
           </p>
         </form>
       </div>
     </div>
   );
-}
+};
+
+export default FromRegister;
