@@ -1,6 +1,13 @@
 import Sidebar from "@/components/Sidebar";
+
 import { getCookie } from "@/utils/cookie";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/router";
+import { messageProvider } from "@/providers/messageProvider";
+import { useForm } from "react-hook-form";
+import { ICreateMessage, IMessage } from "@/types/message";
 
 const Message = () => {
   const cookieString = getCookie("userInfo");
@@ -14,16 +21,36 @@ const Message = () => {
     console.error("Error parsing userInfo cookie:", error);
   }
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<IMessage[] | undefined>();
+  const router = useRouter();
+  const { user_id } = router.query;
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(event.target.value);
-  };
+  const validationSchema = Yup.object().shape({
+    recipientId: Yup.string().default(user_id?.toString()),
+    content: Yup.string(),
+  });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // Perform send message logic here
-    console.log("Sending message:", message);
-    setMessage("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ICreateMessage>({
+    resolver: yupResolver(validationSchema),
+  });
+
+  useEffect(() => {
+    messageProvider
+      .getMessagesByUser(user_id?.toString())
+      .then((messages) => {
+        setMessages(messages.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+  const onSubmit = async (newMessage: ICreateMessage) => {
+    await messageProvider.sendMessage(newMessage);
   };
   return (
     <>
@@ -68,7 +95,7 @@ const Message = () => {
               {/* message input */}
               <div className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4">
                 {/* Input and send button */}
-                <form onSubmit={handleSubmit} className="w-full">
+                <form onSubmit={onSubmit} className="w-full">
                   <textarea
                     className="w-full h-full py-2 px-3 border border-gray-300 rounded-lg resize-none focus:outline-none"
                     placeholder="Type your message..."
