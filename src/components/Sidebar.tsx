@@ -13,7 +13,7 @@ const Sidebar = ({ cookie }) => {
   }, []);
   return (
     <>
-      <Link href="/messags">
+      <Link href="/messages">
         <div className="flex flex-row items-center justify-center h-12 w-full">
           <div className="flex items-center justify-center rounded-2xl text-teal-600 bg-indigo-100 h-10 w-10">
             <svg
