@@ -35,4 +35,12 @@ export const userProvider = {
       throw new Error("Failed to fetch updating. Please try again later."); // Throw a new error for higher-level handling
     }
   },
+  sendMessage: async (content: any) => {
+    try {
+      const response = await authenticatedRequest()?.post("/message/", content);
+    } catch (error) {
+      console.error("An error occurred while sending message", error);
+      throw new Error("Failed sending message");
+    }
+  },
 };

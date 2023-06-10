@@ -30,7 +30,7 @@ export default function FormLogin() {
     try {
       const { authenticate } = await authProvider.signIn(userInfo);
 
-      authenticate && (await router.push("/message")) && reset();
+      authenticate && (await router.push("/messages")) && reset();
     } catch (error) {
       console.error(error);
     }

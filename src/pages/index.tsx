@@ -21,7 +21,7 @@ export default function Home() {
     if (!isAuthenticated) {
       router.push("/sign-in"); // Redirect to login page
     } else {
-      router.push("/message");
+      router.push("/messages");
     }
   }, []);
   return (

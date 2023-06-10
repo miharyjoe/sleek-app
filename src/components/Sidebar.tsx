@@ -5,6 +5,7 @@ import { getCookie } from "@/utils/cookie";
 import Link from "next/link";
 import LogoutButton from "./LogOut";
 import ChannelList from "./channelList";
+import UserList from "./UserList";
 const Sidebar = ({ cookie }) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -12,7 +13,7 @@ const Sidebar = ({ cookie }) => {
   }, []);
   return (
     <>
-      <Link href="/message">
+      <Link href="/messags">
         <div className="flex flex-row items-center justify-center h-12 w-full">
           <div className="flex items-center justify-center rounded-2xl text-teal-600 bg-indigo-100 h-10 w-10">
             <svg
@@ -46,19 +47,6 @@ const Sidebar = ({ cookie }) => {
           </div>
           <div className="text-sm font-semibold mt-2">{user?.name}</div>
           <div className="text-xs text-gray-500">{user?.bio}</div>
-          <div className="flex flex-row items-center mt-3">
-            <div className="flex flex-col justify-center h-4 w-8 bg-teal-500 rounded-full">
-              <div className="h-3 w-3 bg-white rounded-full self-end mr-1"></div>
-            </div>
-            <div className="leading-none ml-1 text-xs">
-              {(() => {
-                if (user?.status === 0) return "Away";
-                else if (user?.status === 1) return "Connected";
-                else if (user?.status === 2) return "Do not disturb";
-                return null; // Return null if the status doesn't match any condition
-              })()}
-            </div>
-          </div>
         </div>
       </Link>
 
@@ -74,7 +62,12 @@ const Sidebar = ({ cookie }) => {
             </span>
           </div>
         </Link>
-        <ChannelList />
+        <div className="flex flex-col space-y-1 mt-4 -mx-2 h-49 overflow-y-auto">
+          <div>Users list</div>
+          <UserList />
+          <div>Channels list</div>
+          <ChannelList />
+        </div>
         <LogoutButton />
       </div>
     </>
