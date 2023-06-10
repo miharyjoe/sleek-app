@@ -4,8 +4,9 @@ import * as yup from "yup";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { authProvider } from "@/providers/authProvider";
+
 import { LoginUserType } from "@/types/user";
+import { authProvider } from "@/providers/authProvider";
 
 const schema = yup
   .object({

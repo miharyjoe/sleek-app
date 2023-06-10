@@ -4,10 +4,26 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import Sidebar from "@/components/Sidebar";
 import Message from "@/components/Message";
+import { getCookie } from "@/utils/cookie";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const router = useRouter();
+  const isAuthenticated = getCookie("userInfo");
+
+  useEffect(() => {
+    // Check if the user is authenticated, otherwise redirect
+
+    // Authentication check logic
+    if (!isAuthenticated) {
+      router.push("/sign-in"); // Redirect to login page
+    } else {
+      router.push("/message");
+    }
+  }, []);
   return (
     <>
       <Head>
@@ -16,17 +32,6 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <div className="flex h-screen antialiased text-gray-800">
-        <div className="flex flex-row h-full w-full overflow-x-hidden">
-          <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
-            <Sidebar />
-          </div>
-          <div className="flex flex-col flex-auto h-full p-6">
-            <Message />
-          </div>
-        </div>
-      </div>
     </>
   );
 }

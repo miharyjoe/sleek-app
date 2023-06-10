@@ -3,9 +3,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Link from "next/link";
 import axios from "axios";
-import { authProvider } from "@/providers/authProvider";
+
 import { useRouter } from "next/router";
 import { CreateUserType } from "@/types/user";
+import { authProvider } from "@/providers/authProvider";
 
 const schema = yup
   .object({

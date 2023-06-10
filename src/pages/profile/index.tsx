@@ -1,5 +1,5 @@
 import Sidebar from "@/components/Sidebar";
-import { userProvider } from "@/providers/userProvider";
+
 import { UserType } from "@/types/user";
 import { getCookie } from "@/utils/cookie";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import Link from "next/link";
+import { userProvider } from "@/providers/userProvider";
 
 const schema = yup
   .object({
@@ -22,9 +23,10 @@ const schema = yup
   })
   .required();
 type FormData = yup.InferType<typeof schema>;
+
 const Profile = () => {
   const cookieString = getCookie("userInfo");
-
+  const [isUpdated, setIsUpdated] = useState(false);
   let cookie: any = null;
   try {
     if (cookieString) {
@@ -42,13 +44,16 @@ const Profile = () => {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
   });
+
   const onSubmit = async (userInfo: FormData) => {
     try {
       await userProvider.updateUser(userInfo);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
   };
+
   const [bio, setBio] = useState(cookie?.bio);
   return (
     <div className="flex h-screen antialiased text-gray-800">
@@ -166,7 +171,7 @@ const Profile = () => {
                 </div>
                 <button
                   type="submit"
-                  className="updateProfileButton block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white"
+                  className="updateProfileButton block w-full rounded-lg bg-teal-600 px-5 py-3 text-sm font-medium text-white hover:bg-slate-400"
                 >
                   Update Profile
                 </button>

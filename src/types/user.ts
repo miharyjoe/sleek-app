@@ -15,6 +15,7 @@ export interface RestUserType {
   id: number;
   email: string;
   name: string;
+  bio?: string;
 }
 
 export interface UserType {
